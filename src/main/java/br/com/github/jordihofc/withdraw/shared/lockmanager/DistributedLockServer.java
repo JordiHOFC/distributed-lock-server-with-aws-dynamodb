@@ -11,6 +11,7 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
+import static java.util.concurrent.TimeUnit.SECONDS;
 
 @Service
 public class DistributedLockServer {
@@ -26,7 +27,11 @@ public class DistributedLockServer {
 
     public Optional<LockItem> acquireLock(String key) {
         LOGGER.info("Tentando Obter um lock para o recurso:  {} in time: {}", key, LocalTime.now());
-        AcquireLockOptions keyQuery = AcquireLockOptions.builder(key).build();
+        //no ambiente de testes, foi necessário equiparar os tempos de lease e hearbeat, pois, as threads sem locks, desistiam de executar retentativas
+        AcquireLockOptions keyQuery = AcquireLockOptions.builder(key)
+                .withTimeUnit(SECONDS)
+                .withAdditionalTimeToWaitForLock(12L)//adicional um tempo extra para as threads que não possuem um lock, ficarem enviando retentativas
+                .build();
 
         try {
             Optional<LockItem> lockItem = dynamoDBLockClient.tryAcquireLock(keyQuery);

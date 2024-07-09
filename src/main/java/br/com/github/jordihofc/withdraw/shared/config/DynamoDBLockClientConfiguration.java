@@ -27,7 +27,7 @@ public class DynamoDBLockClientConfiguration {
         AmazonDynamoDBLockClientOptions dynamoDBLockClientOptions = AmazonDynamoDBLockClientOptions.builder(dynamoDB, "lockTable")
                 .withTimeUnit(TimeUnit.SECONDS)
                 .withLeaseDuration(25l) //define o tempo de lock
-                .withHeartbeatPeriod(5l)//define o tempo em que uma thread ficará tentando pegar um lock
+                .withHeartbeatPeriod(12l)//define o tempo em que uma thread ficará tentando pegar um lock
                 .withCreateHeartbeatBackgroundThread(true)//define uma thread assync para ficar tentando dar o refresh no lock (ref a linha de cima)
                 .build();
 
