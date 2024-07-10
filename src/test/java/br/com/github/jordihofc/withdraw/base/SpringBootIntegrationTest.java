@@ -15,6 +15,7 @@ import org.testcontainers.utility.DockerImageName;
 import java.util.concurrent.CountDownLatch;
 import java.util.function.Consumer;
 
+import static org.slf4j.LoggerFactory.getLogger;
 import static org.testcontainers.containers.localstack.LocalStackContainer.Service.DYNAMODB;
 
 @SpringBootTest
@@ -28,7 +29,7 @@ public abstract class SpringBootIntegrationTest {
 
     ).withServices(DYNAMODB);
 
-    protected static final Logger LOGGER = LoggerFactory.getLogger(SpringBootIntegrationTest.class);
+    protected static final Logger LOGGER = getLogger(SpringBootIntegrationTest.class);
 
     /**
      * Starts many threads concurrently to execute the <code>operation</code> at the same time.

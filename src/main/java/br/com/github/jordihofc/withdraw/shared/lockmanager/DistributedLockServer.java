@@ -1,29 +1,26 @@
 package br.com.github.jordihofc.withdraw.shared.lockmanager;
 
-import com.amazonaws.services.dynamodbv2.*;
+import com.amazonaws.services.dynamodbv2.AcquireLockOptions;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDBLockClient;
+import com.amazonaws.services.dynamodbv2.LockItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalTime;
 import java.util.Optional;
-import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
-import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.slf4j.LoggerFactory.getLogger;
 
 @Service
 public class DistributedLockServer {
     private AmazonDynamoDBLockClient dynamoDBLockClient;
-    private final AmazonDynamoDB dynamoDB;
-    private static final Logger LOGGER = LoggerFactory.getLogger(DistributedLockServer.class);
+    private static final Logger LOGGER = getLogger(DistributedLockServer.class);
 
-    public DistributedLockServer(AmazonDynamoDB dynamoDB, AmazonDynamoDBLockClient dynamoDBLockClient) {
+    public DistributedLockServer(AmazonDynamoDBLockClient dynamoDBLockClient) {
         this.dynamoDBLockClient = dynamoDBLockClient;
-        this.dynamoDB = dynamoDB;
     }
-
 
     public Optional<LockItem> acquireLock(String key) {
         LOGGER.info("Tentando Obter um lock para o recurso:  {} in time: {}", key, LocalTime.now());
